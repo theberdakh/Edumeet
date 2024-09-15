@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">CEFR</string>
+    <string name="title_login">Login</string>
+    <string name="cd_onboarding_image">OnBoarding image</string>
+    <string name="cd_progress">Progress dot</string>
+    <string name="next">Next</string>
+
+    <string name="onboard_title_1">Confidence</string>
+    <string name="onboard_title_2">Patience</string>
+    <string name="onboard_title_3">Student</string>
+
+    <string name="onboard_caption_1">With speaking lessons, you will speak in a\n short time</string>
+    <string name="onboard_caption_2">Take your time to learn. Develop a habit and\n make it a part of your daily life</string>
+    <string name="onboard_caption_3">A student is a knowledge seeker who participates\n in learning under the guidance of a teacher.</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="enter">Enter</string>
+    <string name="cd_add_new_stream">Add new stream</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="planned">Planned</string>
+    <string name="previous">Previous</string>
+    <string name="live">Live</string>
+    <string name="cd_live_author">Live author</string>
+    <string name="all">All</string>
+    <string name="quit">Quit</string>
+    <string name="theme">Theme</string>
+    <string name="start_streaming">Start streaming</string>
+    <string name="cd_profile_image">Profile image</string>
+    <string name="main">Main</string>
+</resources>

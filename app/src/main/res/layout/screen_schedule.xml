@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/live"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/Title" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normal_100"
+            android:background="@drawable/bg_item_live"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvLive"
+                android:layout_width="110dp"
+                android:layout_height="30dp"
+                android:background="@drawable/bg_live"
+                android:fontFamily="@font/dm_sans_medium"
+                android:padding="@dimen/small_50"
+                android:text="@string/live"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/streamTitle"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/dm_sans_medium"
+                android:padding="@dimen/small_100"
+                android:textAppearance="@style/Title"
+                android:textColor="@color/dark_blue"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvLive"
+                tools:text="Conditionals" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_100"
+                android:background="@drawable/bg_account"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/small_150"
+                android:paddingVertical="@dimen/small_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/streamTitle">
+
+                <ImageView
+                    android:id="@+id/authorImage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/cd_live_author"
+                    android:src="@drawable/avatar" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/small_100">
+
+                    <TextView
+                        android:id="@+id/authorName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/dm_sans_medium"
+                        android:textAppearance="@style/Title.Header"
+                        android:textColor="@color/dark_blue"
+                        android:textStyle="bold"
+                        tools:text="Alan Turing" />
+
+                    <TextView
+                        android:id="@+id/authorSubject"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/dm_sans_medium"
+                        android:textColor="@color/dark_blue"
+                        tools:text="Mathematics" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/streamGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_100"
+                android:background="@drawable/bg_account"
+                android:padding="@dimen/small_150"
+                android:textAppearance="@style/Title.Header"
+                android:textColor="@color/dark_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="210" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/normal_100">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/theme"
+                android:layout_marginTop="@dimen/normal_100"
+                android:padding="@dimen/small_100"
+                android:textAppearance="@style/Title.Header"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small_100"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_text_field">
+
+                <EditText
+                    android:id="@+id/etTheme"
+                    android:layout_width="match_parent"
+                    android:background="@android:color/transparent"
+                    android:layout_height="match_parent"
+                    android:importantForAutofill="no"
+                    android:inputType="text|textMultiLine"
+                    android:hint="@string/theme"/>
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:padding="@dimen/small_100"
+                android:layout_marginTop="@dimen/normal_100"
+                android:textAppearance="@style/Title.Header"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small_100"
+                android:visibility="gone"
+                android:background="@drawable/bg_text_field">
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:background="@android:color/transparent"
+                    android:layout_height="match_parent"
+                    android:inputType="textVisiblePassword"
+                    android:autofillHints="password"
+                    android:hint="@string/password"/>
+
+            </FrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvGroups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_group"
+                android:layout_marginTop="@dimen/normal_300"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
+
+            <FrameLayout
+                android:id="@+id/btn_start_streaming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/scarlet"
+                android:background="@drawable/bg_button"
+                android:layout_marginTop="@dimen/normal_200"
+                android:padding="@dimen/normal_100">
+
+                <TextView
+                    android:id="@+id/btnScheduleText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/dm_sans_medium"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/start_streaming"/>
+
+                <ProgressBar
+                    android:id="@+id/loginProgress"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/large_100"
+                    android:indeterminate="true"
+                    android:indeterminateTintMode="src_atop"
+                    android:indeterminateTint="@color/white" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+</androidx.core.widget.NestedScrollView>

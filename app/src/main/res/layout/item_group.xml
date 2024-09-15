@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:textColor="@color/dark_blue"
+    android:padding="@dimen/normal_100"
+    android:background="@drawable/bg_number"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="@style/Title"
+    android:fontFamily="@font/dm_sans_medium"
+    android:maxLines="1"
+    android:layout_margin="@dimen/small_100"
+    tools:text="123"
+    android:textAlignment="center" />

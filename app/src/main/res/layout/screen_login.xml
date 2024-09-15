@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextAppearance="@style/Title"
+        app:titleCentered="true"
+        app:title="@string/enter"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/normal_100">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/username"
+            android:layout_marginTop="@dimen/normal_100"
+            android:padding="@dimen/small_100"
+            android:textAppearance="@style/Title.Header"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_100"
+            android:background="@drawable/bg_text_field">
+
+            <EditText
+                android:id="@+id/etUsername"
+                android:layout_width="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:autofillHints="username"
+                android:hint="@string/username"/>
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:padding="@dimen/small_100"
+            android:layout_marginTop="@dimen/normal_100"
+            android:textAppearance="@style/Title.Header"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_100"
+            android:background="@drawable/bg_text_field">
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_height="match_parent"
+                android:inputType="textVisiblePassword"
+                android:autofillHints="password"
+                android:hint="@string/password"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btn_enter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button"
+            android:layout_marginTop="@dimen/normal_200"
+            android:padding="@dimen/normal_100">
+
+            <TextView
+                android:id="@+id/btnEnterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:fontFamily="@font/dm_sans_medium"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@string/enter"/>
+
+            <ProgressBar
+                android:id="@+id/loginProgress"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/large_100"
+                android:indeterminate="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/white" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

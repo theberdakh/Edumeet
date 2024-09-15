@@ -1,0 +1,47 @@
+[versions]
+agp = "8.5.2"
+androidApiClient = "1.6.1"
+androidLiveStream = "1.4.2"
+androidPlayer = "1.6.0"
+converterGson = "2.11.0"
+glide = "4.16.0"
+koinAndroid = "3.4.3"
+koinAndroidExt = "3.0.2"
+kotlin = "1.9.0"
+coreKtx = "1.13.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+loggingInterceptor = "5.0.0-alpha.6"
+lottie = "6.4.0"
+material = "1.12.0"
+activity = "1.9.2"
+constraintlayout = "2.1.4"
+swiperefreshlayout = "1.1.0"
+
+[libraries]
+android-api-client = { module = "video.api:android-api-client", version.ref = "androidApiClient" }
+android-live-stream = { module = "video.api:android-live-stream", version.ref = "androidLiveStream" }
+android-player = { module = "video.api:android-player", version.ref = "androidPlayer" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "koinAndroidExt" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="end"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/normal_100"
+    android:orientation="vertical"
+    android:background="@drawable/bg_item_live">
+
+    <TextView
+        android:id="@+id/tvLive"
+        android:layout_width="110dp"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:padding="@dimen/small_50"
+        android:textColor="@color/white"
+        android:fontFamily="@font/dm_sans_medium"
+        android:background="@drawable/bg_live"
+        android:text="@string/live"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+   <TextView
+       android:id="@+id/streamTitle"
+       android:layout_width="match_parent"
+       android:layout_height="100dp"
+       android:ellipsize="end"
+       tools:text="Conditionals"
+       android:textAppearance="@style/Title"
+       android:padding="@dimen/small_100"
+       android:textColor="@color/dark_blue"
+       android:textStyle="bold"
+       android:fontFamily="@font/dm_sans_medium"
+       app:layout_constraintTop_toBottomOf="@id/tvLive"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_100"
+            android:paddingHorizontal="@dimen/small_150"
+            android:paddingVertical="@dimen/small_50"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_account"
+            app:layout_constraintTop_toBottomOf="@id/streamTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/authorImage"
+                android:layout_width="40dp"
+                android:src="@drawable/avatar"
+                android:layout_height="40dp"
+                android:contentDescription="@string/cd_live_author"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/small_100"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/authorName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Title.Header"
+                    tools:text="Alan Turing"
+                    android:textColor="@color/dark_blue"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/dm_sans_medium"
+                    />
+
+                <TextView
+                    android:id="@+id/authorSubject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Mathematics"
+                    android:textColor="@color/dark_blue"
+                    android:fontFamily="@font/dm_sans_medium" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/streamGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/small_150"
+        android:background="@drawable/bg_account"
+        android:textAppearance="@style/Title.Header"
+        tools:text="210"
+        android:textColor="@color/dark_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/small_100"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
