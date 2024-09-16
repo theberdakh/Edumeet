@@ -11,7 +11,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import com.imax.ToastHelper
+import com.imax.toast.ToastHelper
 import com.imax.edumeet.R
 import com.imax.edumeet.databinding.ScreenWatchBinding
 import com.imax.edumeet.presentation.models.stream.LiveStreamItem

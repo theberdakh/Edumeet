@@ -1,4 +1,4 @@
-package com.imax
+package com.imax.toast
 
 import android.content.Context
 import android.widget.Toast

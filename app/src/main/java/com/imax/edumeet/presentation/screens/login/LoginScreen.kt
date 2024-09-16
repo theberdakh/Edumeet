@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.imax.ToastHelper
+import com.imax.toast.ToastHelper
 import com.imax.edumeet.R
 import com.imax.edumeet.data.remote.models.Status
 import com.imax.edumeet.data.remote.models.errorMessage

@@ -7,7 +7,7 @@ import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.imax.ToastHelper
+import com.imax.toast.ToastHelper
 import com.imax.edumeet.R
 import com.imax.edumeet.data.remote.models.Status
 import com.imax.edumeet.data.remote.models.errorMessage
@@ -16,7 +16,6 @@ import com.imax.edumeet.databinding.ScreenScheduleBinding
 import com.imax.edumeet.presentation.adapter.GroupItemListAdapter
 import com.imax.edumeet.presentation.screens.stream.StreamScreen
 import com.imax.extensions.ViewExtensions.string
-import com.imax.navigation.NavigationExtensions.replaceFragment
 import com.imax.viewbinding.viewBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

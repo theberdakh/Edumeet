@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.imax.ToastHelper
+import com.imax.toast.ToastHelper
 import com.imax.edumeet.databinding.ScreenStreamBinding
 import org.koin.android.ext.android.inject
 import video.api.livestream.ApiVideoLiveStream
