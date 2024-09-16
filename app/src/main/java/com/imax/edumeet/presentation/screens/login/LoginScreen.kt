@@ -28,12 +28,14 @@ class LoginScreen : Fragment(R.layout.screen_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeLoginViewModel()
+
 
         binding.btnEnter.setOnClickListener {
             val username = binding.etUsername.trimmedString
             val password = binding.etPassword.trimmedString
+
             loginViewModel.login(username, password)
+            observeLoginViewModel()
         }
 
     }
