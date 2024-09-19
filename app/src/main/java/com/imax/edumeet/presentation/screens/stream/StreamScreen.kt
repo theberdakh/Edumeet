@@ -9,6 +9,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.imax.dialog.AlertDialogHelper
+import com.imax.edumeet.R
 import com.imax.toast.ToastHelper
 import com.imax.edumeet.databinding.ScreenStreamBinding
 import org.koin.android.ext.android.inject
@@ -78,7 +80,15 @@ class StreamScreen : AppCompatActivity() {
         setContentView(binding.root)
 
         streamKey = intent.getStringExtra(ARG_STREAM_KEY)
+        val alertDialogHelper = AlertDialogHelper(this)
 
+        binding.close.setOnClickListener {
+            alertDialogHelper.showAlertDialog(message = R.string.dialog_message_close_stream, title = R.string.dialog_title_close_stream, positiveButton = R.string.stop_streaming, negativeButton = R.string.cancel, positiveButtonClick = { dialog, which ->
+                this.finish()
+            }, negativeButtonClick = { dialog, which ->
+                dialog.cancel()
+            })
+        }
 
         requestPermissions()
         val connectionListener = object : IConnectionListener {
@@ -88,6 +98,7 @@ class StreamScreen : AppCompatActivity() {
 
             override fun onConnectionSuccess() {
                 Log.i("Connection", "Success")
+                binding.live.playAnimation()
             }
 
 

@@ -28,4 +28,8 @@
     <string name="start_streaming">Start streaming</string>
     <string name="cd_profile_image">Profile image</string>
     <string name="main">Main</string>
+    <string name="dialog_message_close_stream">Do you want to stop streaming?</string>
+    <string name="dialog_title_close_stream">Stop streaming</string>
+    <string name="stop_streaming">Stop streaming</string>
+    <string name="cancel">Cancel</string>
 </resources>
