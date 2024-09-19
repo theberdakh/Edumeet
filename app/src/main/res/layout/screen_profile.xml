@@ -77,9 +77,11 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlannedStreams"
                     android:layout_width="match_parent"
-                    tools:listitem="@layout/item_stream"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:clipToPadding="false"
+                    android:paddingBottom="80dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_stream" />
 
             </LinearLayout>
 
