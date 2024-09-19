@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/ic_home_selector"
+        android:icon="@drawable/ic_home"
         android:title="@string/home" />
 
-    <!--This item is just to create space for add button -->
     <item
-        android:id="@+id/item_teacher_start_stream_place"
-        android:title=""/>
+        android:id="@+id/action_none"
+        android:title="@string/home" />
 
     <item
         android:id="@+id/action_profile"
-        android:icon="@drawable/ic_profile_selector"
-        android:title="@string/profile" />
+        android:icon="@drawable/ic_profile"
+        android:title="@string/home" />
+
 </menu>
