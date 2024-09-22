@@ -11,6 +11,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.imax.toast.ToastHelper
 import com.imax.edumeet.R
 import com.imax.edumeet.databinding.ScreenWatchBinding
@@ -48,6 +49,11 @@ class WatchScreen: Fragment(R.layout.screen_watch) {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Glide.with(requireContext())
+            .load(liveStreamItem)
+            .placeholder(R.drawable.ic_profile_fill)
+            .into(binding.authorImage)
 
         binding.webView.apply {
             settings.javaScriptEnabled = true

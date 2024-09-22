@@ -11,7 +11,6 @@ class GroupItemViewHolder(private val binding: ItemGroupBinding): RecyclerView.V
 
     fun bind(item: GroupItem, onClick: ((GroupItem, Int) -> Unit)?, position: Int) {
         binding.root.text = item.name
-
         binding.root.setOnClickListener{
             selectedPosition = position
             binding.root.setBackgroundResource(R.drawable.bg_number_selected)

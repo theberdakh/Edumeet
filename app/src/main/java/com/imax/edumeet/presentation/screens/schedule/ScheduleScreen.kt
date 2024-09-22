@@ -36,6 +36,10 @@ class ScheduleScreen: Fragment(R.layout.screen_schedule) {
             binding.streamGroup.text = groupItem.name
         }
 
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
         binding.streamTitle.setText(R.string.theme)
         binding.etTheme.doAfterTextChanged { text ->
             if (text.toString().isEmpty()){
@@ -105,24 +109,26 @@ class ScheduleScreen: Fragment(R.layout.screen_schedule) {
 
         scheduleScreenViewModel.streamState.onEach {
             if (!it.isLoading){
-                when(it.result?.status){
-                    Status.SUCCESS -> {
-                        it.result.data?.let { streamResponse ->
-                           toastHelper.showToast("Stream created successfully!")
-                            requireActivity().supportFragmentManager.popBackStack()
-                            val intent = Intent(requireActivity(), StreamScreen::class.java)
-                            val bundle = Bundle().apply {
-                                putString("STREAM_KEY", streamResponse.streamInfo.streamKey)
+                if (it.result != null){
+                    when(it.result.status){
+                        Status.SUCCESS -> {
+                            it.result.data?.let { streamResponse ->
+                                toastHelper.showToast("Stream created successfully!")
+                                requireActivity().supportFragmentManager.popBackStack()
+                                val intent = Intent(requireActivity(), StreamScreen::class.java)
+                                val bundle = Bundle().apply {
+                                    putString("STREAM_KEY", streamResponse.streamInfo.streamKey)
+                                }
+                                intent.putExtras(bundle)
+                                startActivity(intent)
+
                             }
-                            intent.putExtras(bundle)
-                            startActivity(intent)
 
-                       }
-
+                        }
+                        Status.ERROR -> toastHelper.showToast("Error retrieving user data")
                     }
-                    Status.ERROR -> toastHelper.showToast("Error retrieving user data")
-                    null -> toastHelper.showToast("User is null")
                 }
+
             }
             Log.d("Schedule state", "${it}")
         }.launchIn(viewLifecycleOwner.lifecycleScope)

@@ -21,7 +21,6 @@
                 android:id="@+id/image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/avatar"
                 android:contentDescription="@string/cd_profile_image"/>
 
             <TextView

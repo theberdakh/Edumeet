@@ -20,7 +20,6 @@
         <ImageView
             android:id="@+id/authorImage"
             android:layout_width="40dp"
-            android:src="@drawable/avatar"
             android:layout_height="40dp"
             android:contentDescription="@string/cd_live_author"/>
 
