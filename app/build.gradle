@@ -21,12 +21,12 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "BASE_URL", "\"https://stream-service-amber.vercel.app\""
+            buildConfigField "String", "BASE_URL", "\"https://stream-service-api.vercel.app\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "BASE_URL", "\"https://stream-service-amber.vercel.app\""
+            buildConfigField "String", "BASE_URL", "\"https://stream-service-api.vercel.app\""
         }
     }
     compileOptions {

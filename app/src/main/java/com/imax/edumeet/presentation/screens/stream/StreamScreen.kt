@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +15,17 @@ import com.imax.dialog.AlertDialogHelper
 import com.imax.edumeet.R
 import com.imax.toast.ToastHelper
 import com.imax.edumeet.databinding.ScreenStreamBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import video.api.livestream.ApiVideoLiveStream
 import video.api.livestream.enums.Resolution
 import video.api.livestream.interfaces.IConnectionListener
 import video.api.livestream.models.AudioConfig
 import video.api.livestream.models.VideoConfig
+import video.api.livestream.views.ApiVideoView
 
 private const val ARG_STREAM_KEY = "STREAM_KEY"
 
@@ -27,6 +34,8 @@ class StreamScreen : AppCompatActivity() {
     private lateinit var apiVideo: ApiVideoLiveStream
     private val toastHelper by inject<ToastHelper>()
     private var streamKey: String? = ""
+
+
 
     private val permissions = arrayOf(
         Manifest.permission.RECORD_AUDIO,
@@ -74,59 +83,89 @@ class StreamScreen : AppCompatActivity() {
         return true
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ScreenStreamBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        streamKey = intent.getStringExtra(ARG_STREAM_KEY)
-        val alertDialogHelper = AlertDialogHelper(this)
 
+        streamKey = intent.getStringExtra(ARG_STREAM_KEY)
+
+
+        val alertDialogHelper = AlertDialogHelper(this)
         binding.close.setOnClickListener {
-            alertDialogHelper.showAlertDialog(message = R.string.dialog_message_close_stream, title = R.string.dialog_title_close_stream, positiveButton = R.string.stop_streaming, negativeButton = R.string.cancel, positiveButtonClick = { dialog, which ->
-                this.finish()
-            }, negativeButtonClick = { dialog, which ->
-                dialog.cancel()
-            })
+            alertDialogHelper.showAlertDialog(
+                message = R.string.dialog_message_close_stream,
+                title = R.string.dialog_title_close_stream,
+                positiveButton = R.string.stop_streaming,
+                negativeButton = R.string.cancel,
+                positiveButtonClick = { dialog, which ->
+                    this.finish()
+                },
+                negativeButtonClick = { dialog, which ->
+                    dialog.cancel()
+                })
         }
 
         requestPermissions()
+
+        streamKey?.let {
+            Log.i("StreamScreen", it)
+            startStreaming()
+        }
+
+    }
+
+    private fun startStreaming() {
+
+        val alertDialogHelper = AlertDialogHelper(this)
+
         val connectionListener = object : IConnectionListener {
             override fun onConnectionFailed(reason: String) {
-                Log.e("Error", "Failed: $reason")
+                runOnUiThread {
+                    toastHelper.showToast(reason)
+                    alertDialogHelper.showAlertDialog(
+                        message = reason,
+                        title = R.string.dialog_title_failed,
+                        positiveButton = R.string.retry,
+                        negativeButton = R.string.end_livestream,
+                        positiveButtonClick = { dialog, which ->
+                            startStreaming()
+                        },
+                        negativeButtonClick = { dialog, which ->
+                            this@StreamScreen.finish()
+                        })
+                }
             }
 
             override fun onConnectionSuccess() {
-                Log.i("Connection", "Success")
-                binding.live.playAnimation()
+                runOnUiThread{
+                    toastHelper.showToast("You are live now!")
+                }
             }
 
 
             override fun onDisconnect() {
+                runOnUiThread {
+                    alertDialogHelper.showAlertDialog(
+                        message = R.string.dialog_message_disconnected,
+                        title = R.string.dialog_title_disconnected,
+                        positiveButton = R.string.retry,
+                        negativeButton = R.string.end_livestream,
+                        positiveButtonClick = { dialog, which ->
+                            startStreaming()
+                        },
+                        negativeButtonClick = { dialog, which ->
+                            this@StreamScreen.finish()
+                        })
+                    toastHelper.showToast("Live broadcasting disconnected!")
+                }
                 Log.i("Connection", "Disconnected")
 
             }
         }
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-
-        val apiVideoView = binding.apiVideoView
         val audioConfig = AudioConfig(
             bitrate = 128 * 1000, // 128 kbps
             sampleRate = 44100, // 44.1 kHz
@@ -139,6 +178,7 @@ class StreamScreen : AppCompatActivity() {
             resolution = Resolution.RESOLUTION_720.size,
             fps = 30
         )
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
@@ -147,13 +187,6 @@ class StreamScreen : AppCompatActivity() {
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         apiVideo = ApiVideoLiveStream(
@@ -161,11 +194,11 @@ class StreamScreen : AppCompatActivity() {
             connectionListener = connectionListener,
             initialAudioConfig = audioConfig,
             initialVideoConfig = videoConfig,
-            apiVideoView = apiVideoView
+            apiVideoView = binding.apiVideoView
         )
 
         streamKey?.let {
-            apiVideo.startStreaming(it, "rtmps://broadcast.api.video:1936/s")
+            apiVideo.startStreaming(it, "rtmp://broadcast.api.video/s")
         }
 
     }

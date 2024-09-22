@@ -14,4 +14,11 @@ class AuthRepository(private val api: EduMeetApi) {
     }.catch {
         emit(ResultModel.error(it))
     }
+
+    fun getUser() = flow {
+        val response = api.getUser()
+        emit(ResultModel.success(response))
+    }.catch {
+        emit(ResultModel.error(it))
+    }
 }

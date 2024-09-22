@@ -12,7 +12,6 @@ class AlertDialogHelper(private val context: Context) {
     private val builder = MaterialAlertDialogBuilder(context)
 
     fun showAlertDialog(@StringRes message: Int, @StringRes title: Int, @StringRes positiveButton: Int, @StringRes negativeButton: Int, positiveButtonClick: DialogInterface.OnClickListener, negativeButtonClick: DialogInterface.OnClickListener) {
-
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(positiveButton, positiveButtonClick)
@@ -20,7 +19,16 @@ class AlertDialogHelper(private val context: Context) {
         builder.setBackground(AppCompatResources.getDrawable(context, R.drawable.bg_dialog))
         builder.create()
         builder.show()
+    }
 
+    fun showAlertDialog(message: String, @StringRes title: Int, @StringRes positiveButton: Int, @StringRes negativeButton: Int, positiveButtonClick: DialogInterface.OnClickListener, negativeButtonClick: DialogInterface.OnClickListener) {
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton(positiveButton, positiveButtonClick)
+        builder.setNegativeButton(negativeButton, negativeButtonClick)
+        builder.setBackground(AppCompatResources.getDrawable(context, R.drawable.bg_dialog))
+        builder.create()
+        builder.show()
     }
 
 

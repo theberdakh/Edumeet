@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.imax.toast.ToastHelper
 import com.imax.edumeet.R
 import com.imax.edumeet.data.local.LocalPreferences
@@ -29,6 +30,7 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
     private val streamItemListAdapter by lazy { StreamItemListAdapter() }
     private val localPreferences by inject<LocalPreferences>()
     private val toastHelper by inject<ToastHelper>()
+    private val profileScreenViewModel by viewModel<ProfileScreenViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,6 +40,10 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
         binding.rvLiveStreams.adapter = liveStreamItemListAdapter
         binding.rvPlannedStreams.adapter = streamItemListAdapter
 
+        binding.swipeRefresh.setOnRefreshListener {
+            observeHomeScreenViewModel()
+        }
+
         liveStreamItemListAdapter.setOnLiveStreamItemClickListener { liveStreamItem ->
             requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchScreen.newInstance(liveStreamItem) )
         }
@@ -45,13 +51,47 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
             requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchScreen.newInstance(streamItem) )
         }
 
+        profileScreenViewModel.getUser()
+        profileScreenViewModel.userState.onEach {
+            if (it.isLoading) {
+                binding.swipeRefresh.isRefreshing = true
+            } else {
+                when (it.result?.status) {
+                    Status.SUCCESS -> {
+                        loadUserPreferences()
+                    }
+                    Status.ERROR -> it.result.errorThrowable?.errorMessage?.let { errorMessage ->
+                        toastHelper.showToast(errorMessage)
+                    }
 
+                    null -> {
+                        toastHelper.showToast("User data not found")
+                    }
+                }
+                binding.swipeRefresh.isRefreshing = false
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+
+
+
+
+
+    }
+
+    private fun loadUserPreferences() {
         localPreferences.getUser().apply {
+            Log.i("ProfileScreen", profileImage)
+            Glide.with(requireContext())
+                .load(profileImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile_fill)
+                .into(binding.image)
+
+
             binding.name.text = name
             binding.subject.text = science
         }
-
-
     }
 
     private fun observeHomeScreenViewModel() {
@@ -80,8 +120,8 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        homeScreenViewModel.getAllLiveStreamsState()
-        homeScreenViewModel.liveStreamsState.onEach {
+        homeScreenViewModel.getPlannedStreams()
+        homeScreenViewModel.plannedStreamsState.onEach {
             if (it.isLoading) {
                 binding.swipeRefresh.isRefreshing = true
             } else {

@@ -1,5 +1,6 @@
 package com.imax.edumeet.di
 
+import android.util.Log
 import com.imax.edumeet.BuildConfig
 import com.imax.edumeet.data.local.LocalPreferences
 import com.imax.edumeet.data.remote.api.EduMeetApi
@@ -28,6 +29,7 @@ fun provideRetrofit(localPreferences: LocalPreferences): Retrofit {
         val token = localPreferences.getToken()
 
         val newRequest = if (token.isNotEmpty()) {
+            Log.i("Token", "$token")
             originalRequest.newBuilder()
                 .addHeader("Authorization", "Bearer $token")
                 .build()

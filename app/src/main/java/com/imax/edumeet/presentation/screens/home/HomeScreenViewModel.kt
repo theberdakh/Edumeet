@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.imax.edumeet.data.remote.models.NetworkState
 import com.imax.edumeet.data.remote.models.ResultModel
 import com.imax.edumeet.data.remote.models.Status
+import com.imax.edumeet.data.remote.models.stream.live.toLiveStreamItem
 import com.imax.edumeet.data.remote.models.stream.toLiveStreamItem
 import com.imax.edumeet.data.remote.models.stream.toStreamItem
 import com.imax.edumeet.data.repository.StreamRepository
@@ -46,23 +47,23 @@ class HomeScreenViewModel(private val repository: StreamRepository) : ViewModel(
         }
     }
 
-     private val _liveStreamsState = MutableStateFlow(NetworkState<List<LiveStreamItem>>())
-      internal val liveStreamsState: StateFlow<NetworkState<List<LiveStreamItem>>> = _liveStreamsState.asStateFlow()
-      fun getAllLiveStreamsState() = viewModelScope.launch {
-             repository.getLiveStreams()
-                 .onStart {_liveStreamsState.value = NetworkState(isLoading = true)}
-                 .catch { _liveStreamsState.value = NetworkState(isLoading = false, ResultModel.error(it)) }
+     private val _plannedStreamsState = MutableStateFlow(NetworkState<List<LiveStreamItem>>())
+      internal val plannedStreamsState: StateFlow<NetworkState<List<LiveStreamItem>>> = _plannedStreamsState.asStateFlow()
+      fun getPlannedStreams() = viewModelScope.launch {
+             repository.getPlannedStreams()
+                 .onStart {_plannedStreamsState.value = NetworkState(isLoading = true)}
+                 .catch { _plannedStreamsState.value = NetworkState(isLoading = false, ResultModel.error(it)) }
                  .collect { r ->
                  when (r.status) {
                      Status.SUCCESS -> {
-                         _liveStreamsState.value =
+                         _plannedStreamsState.value =
                              NetworkState(
                                  isLoading = false,
                                  result = ResultModel.success(r.data?.map { it.toLiveStreamItem() })
                              )
                      }
 
-                     Status.ERROR -> _liveStreamsState.value =
+                     Status.ERROR -> _plannedStreamsState.value =
                          NetworkState(
                              isLoading = false,
                              result = r.errorThrowable?.let { ResultModel.error(it) })
@@ -70,5 +71,31 @@ class HomeScreenViewModel(private val repository: StreamRepository) : ViewModel(
                  }
              }
          }
+
+    private val _liveStreamsState = MutableStateFlow(NetworkState<List<LiveStreamItem>>())
+    internal val liveStreamsState: StateFlow<NetworkState<List<LiveStreamItem>>> = _liveStreamsState.asStateFlow()
+    fun getLiveStreams() = viewModelScope.launch {
+        repository.getLiveStreams()
+            .onStart {_liveStreamsState.value = NetworkState(isLoading = true)}
+            .catch { _liveStreamsState.value = NetworkState(isLoading = false, ResultModel.error(it)) }
+            .collect { r ->
+                when (r.status) {
+                    Status.SUCCESS -> {
+                        _liveStreamsState.value =
+                            NetworkState(
+                                isLoading = false,
+                                result = ResultModel.success(r.data?.map { it.toLiveStreamItem() })
+                            )
+                    }
+
+                    Status.ERROR -> _liveStreamsState.value =
+                        NetworkState(
+                            isLoading = false,
+                            result = r.errorThrowable?.let { ResultModel.error(it) })
+
+                }
+            }
+    }
+
 
 }

@@ -76,7 +76,7 @@ class HomeScreen : Fragment(R.layout.screen_home) {
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        homeScreenViewModel.getAllLiveStreamsState()
+        homeScreenViewModel.getLiveStreams()
         homeScreenViewModel.liveStreamsState.onEach {
                     if (it.isLoading) {
                       binding.swipeRefresh.isRefreshing = true

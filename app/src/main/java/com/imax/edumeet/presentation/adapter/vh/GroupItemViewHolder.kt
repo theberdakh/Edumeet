@@ -1,6 +1,7 @@
 package com.imax.edumeet.presentation.adapter.vh
 
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.imax.edumeet.R
 import com.imax.edumeet.databinding.ItemGroupBinding
 import com.imax.edumeet.presentation.models.group.GroupItem

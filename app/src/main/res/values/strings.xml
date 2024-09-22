@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CEFR</string>
+    <string name="app_name">Edumeet</string>
     <string name="title_login">Login</string>
     <string name="cd_onboarding_image">OnBoarding image</string>
     <string name="cd_progress">Progress dot</string>
@@ -32,4 +32,9 @@
     <string name="dialog_title_close_stream">Stop streaming</string>
     <string name="stop_streaming">Stop streaming</string>
     <string name="cancel">Cancel</string>
+    <string name="dialog_title_disconnected">You are disconnected</string>
+    <string name="dialog_message_disconnected">You are disconnected. You can check your connection and retry or end live streaming now.</string>
+    <string name="retry">Retry</string>
+    <string name="end_livestream">End live streaming</string>
+    <string name="dialog_title_failed">Failed</string>
 </resources>

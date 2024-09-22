@@ -15,8 +15,8 @@ class StreamRepository(private val api: EduMeetApi) {
         emit(ResultModel.error(it))
     }
 
-    fun getLiveStreams() = flow {
-        val response = api.getLiveStreams()
+    fun getPlannedStreams() = flow {
+        val response = api.getPlannedStreams()
         emit(ResultModel.success(response))
     }.catch {
         emit(ResultModel.error(it))
@@ -35,4 +35,12 @@ class StreamRepository(private val api: EduMeetApi) {
     }.catch {
         emit(ResultModel.error(it))
     }
+
+    fun getLiveStreams() = flow {
+        val response = api.getLiveStreams()
+        emit(ResultModel.success(response))
+    }.catch {
+        emit(ResultModel.error(it))
+    }
+
 }
