@@ -10,8 +10,11 @@ class StreamItemViewHolder(private val binding: ItemStreamBinding): RecyclerView
     fun bind(item: StreamItem, onStreamItemClickListener: ((StreamItem) -> Unit)?){
         binding.authorName.text =item.streamTitle
         binding.authorSubject.text = item.authorName
+
         Glide.with(binding.root.context)
-            .load(R.drawable.ic_profile_fill)
+            .load(item.authorProfile)
+            .circleCrop()
+            .placeholder(R.drawable.ic_profile_fill)
             .into(binding.authorImage)
 
         binding.root.setOnClickListener {

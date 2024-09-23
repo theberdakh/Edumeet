@@ -10,10 +10,10 @@ data class LiveStreamItem(
     val streamStatus: String = "",
     val streamDate: String = "",
     val streamGroup: String = "",
-    val streamUrl: String = "",
+    val playerUrl: String = "",
     val authorName: String = "",
     val authorSubject: String = "",
-    val authorProfile: String = ""
+    val authorProfile: String = "",
 ): Parcelable
 
 object LiveStreamItemCallback: DiffUtil.ItemCallback<LiveStreamItem>() {

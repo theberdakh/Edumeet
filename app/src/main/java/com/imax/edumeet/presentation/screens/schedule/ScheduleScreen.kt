@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.imax.toast.ToastHelper
 import com.imax.edumeet.R
 import com.imax.edumeet.data.remote.models.Status
@@ -97,6 +98,11 @@ class ScheduleScreen: Fragment(R.layout.screen_schedule) {
                             teacher = user
                             binding.authorName.text = user.name
                             binding.authorSubject.text = user.science
+                            Glide.with(requireContext())
+                                .load(user.profileImage)
+                                .circleCrop()
+                                .placeholder(R.drawable.ic_profile_fill)
+                                .into(binding.authorImage)
                         }
 
                     }

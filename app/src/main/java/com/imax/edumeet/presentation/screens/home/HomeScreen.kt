@@ -52,7 +52,7 @@ class HomeScreen : Fragment(R.layout.screen_home) {
 
     private fun observeHomeScreenViewModel() {
 
-        homeScreenViewModel.getAllStreams()
+        homeScreenViewModel.getPreviousStreams()
         homeScreenViewModel.allStreamsState.onEach {
             if (it.isLoading) {
                 binding.swipeRefresh.isRefreshing = true

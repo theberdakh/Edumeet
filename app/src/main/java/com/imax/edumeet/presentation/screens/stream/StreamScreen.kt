@@ -1,6 +1,7 @@
 package com.imax.edumeet.presentation.screens.stream
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -8,9 +9,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.imax.dialog.AlertDialogHelper
 import com.imax.edumeet.R
 import com.imax.toast.ToastHelper
@@ -84,7 +87,6 @@ class StreamScreen : AppCompatActivity() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ScreenStreamBinding.inflate(layoutInflater)
@@ -92,7 +94,6 @@ class StreamScreen : AppCompatActivity() {
 
 
         streamKey = intent.getStringExtra(ARG_STREAM_KEY)
-
 
         val alertDialogHelper = AlertDialogHelper(this)
         binding.close.setOnClickListener {
@@ -109,15 +110,56 @@ class StreamScreen : AppCompatActivity() {
                 })
         }
 
-        requestPermissions()
 
-        streamKey?.let {
-            Log.i("StreamScreen", it)
-            startStreaming()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        when {
+            (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED) -> {
+                startStreaming()
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) -> {
+                toastHelper.showToast("Permissions denied")
+
+                requestPermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO
+                    )
+                )
+            }
         }
 
     }
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if ((permissions[Manifest.permission.CAMERA] == true)
+                && (permissions[Manifest.permission.RECORD_AUDIO] == true)
+            ) {
+               startStreaming()
+            } else {
+                toastHelper.showToast("Permissions denied")
+            }
+        }
+
+    @SuppressLint("MissingPermission")
     private fun startStreaming() {
 
         val alertDialogHelper = AlertDialogHelper(this)
@@ -179,16 +221,6 @@ class StreamScreen : AppCompatActivity() {
             fps = 30
         )
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
         apiVideo = ApiVideoLiveStream(
             context = this,
             connectionListener = connectionListener,

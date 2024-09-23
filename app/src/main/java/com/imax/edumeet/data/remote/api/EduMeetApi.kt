@@ -7,9 +7,12 @@ import com.imax.edumeet.data.remote.models.login.User
 import com.imax.edumeet.data.remote.models.stream.StreamRequest
 import com.imax.edumeet.data.remote.models.stream.StreamResponse
 import com.imax.edumeet.data.remote.models.stream.live.LiveStreamResponse
+import com.imax.edumeet.data.remote.models.stream.my.MyStreamsResponse
+import com.imax.edumeet.data.remote.models.video.VideoResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface EduMeetApi {
 
@@ -19,8 +22,8 @@ interface EduMeetApi {
     @GET("/teacher/me")
     suspend fun getUser(): User
 
-    @GET("/streams/all")
-    suspend fun getAllStreams(): List<StreamResponse>
+    @GET("/streams/previous")
+    suspend fun getPreviousStreams(): List<StreamResponse>
 
     @GET("/streams/soon")
     suspend fun getPlannedStreams(): List<StreamResponse>
@@ -33,6 +36,12 @@ interface EduMeetApi {
     
     @GET("/streams/live")
     suspend fun getLiveStreams(): List<LiveStreamResponse>
+
+    @GET("/stream/{streamId}")
+    suspend fun getVideo(@Path("streamId") streamId: String): VideoResponse
+
+    @GET("/my-streams/{teacherId}")
+    suspend fun getMyStreams(@Path("teacherId") teacherId: String): MyStreamsResponse
 
 
 }

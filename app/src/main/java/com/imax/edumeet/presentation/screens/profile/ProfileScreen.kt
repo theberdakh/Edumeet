@@ -11,6 +11,7 @@ import com.imax.edumeet.R
 import com.imax.edumeet.data.local.LocalPreferences
 import com.imax.edumeet.data.remote.models.Status
 import com.imax.edumeet.data.remote.models.errorMessage
+import com.imax.edumeet.data.remote.models.stream.toStreamItem
 import com.imax.edumeet.databinding.ScreenProfileBinding
 import com.imax.edumeet.presentation.adapter.LiveStreamItemListAdapter
 import com.imax.edumeet.presentation.adapter.StreamItemListAdapter
@@ -25,7 +26,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileScreen: Fragment(R.layout.screen_profile) {
     private val binding by viewBinding<ScreenProfileBinding>()
-    private val homeScreenViewModel by viewModel<HomeScreenViewModel>()
     private val liveStreamItemListAdapter by lazy { LiveStreamItemListAdapter() }
     private val streamItemListAdapter by lazy { StreamItemListAdapter() }
     private val localPreferences by inject<LocalPreferences>()
@@ -51,26 +51,8 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
             requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchScreen.newInstance(streamItem) )
         }
 
-        profileScreenViewModel.getUser()
-        profileScreenViewModel.userState.onEach {
-            if (it.isLoading) {
-                binding.swipeRefresh.isRefreshing = true
-            } else {
-                when (it.result?.status) {
-                    Status.SUCCESS -> {
-                        loadUserPreferences()
-                    }
-                    Status.ERROR -> it.result.errorThrowable?.errorMessage?.let { errorMessage ->
-                        toastHelper.showToast(errorMessage)
-                    }
 
-                    null -> {
-                        toastHelper.showToast("User data not found")
-                    }
-                }
-                binding.swipeRefresh.isRefreshing = false
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
 
 
 
@@ -96,50 +78,49 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
 
     private fun observeHomeScreenViewModel() {
 
-        homeScreenViewModel.getAllStreams()
-        homeScreenViewModel.allStreamsState.onEach {
+        profileScreenViewModel.getUser()
+        profileScreenViewModel.userState.onEach {
             if (it.isLoading) {
                 binding.swipeRefresh.isRefreshing = true
             } else {
                 when (it.result?.status) {
                     Status.SUCCESS -> {
-                        streamItemListAdapter.submitList(null)
-                        streamItemListAdapter.submitList(it.result.data)
+                        loadUserPreferences()
                     }
-
                     Status.ERROR -> it.result.errorThrowable?.errorMessage?.let { errorMessage ->
                         toastHelper.showToast(errorMessage)
-                        Log.e("Log", errorMessage)
                     }
 
                     null -> {
-                        toastHelper.showToast("null")
+                        toastHelper.showToast("User data not found")
                     }
                 }
                 binding.swipeRefresh.isRefreshing = false
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-        homeScreenViewModel.getPlannedStreams()
-        homeScreenViewModel.plannedStreamsState.onEach {
-            if (it.isLoading) {
+        profileScreenViewModel.getMyStreams()
+        profileScreenViewModel.myStreamsState.onEach {
+            if (it.isLoading){
                 binding.swipeRefresh.isRefreshing = true
-            } else {
-                when (it.result?.status) {
-                    Status.SUCCESS -> {
-                        liveStreamItemListAdapter.submitList(null)
-                        liveStreamItemListAdapter.submitList(it.result.data)
+            }
+            else {
+                if (it.result != null){
+                    when(it.result.status){
+                        Status.SUCCESS -> {
+                            val previousStreams = it.result.data?.let { myStreamsResponse ->
+                                myStreamsResponse.previous.map { stream->
+                                        stream.toStreamItem()
+                                }
+                            }
+                            streamItemListAdapter.submitList(previousStreams)
+                        }
+                        Status.ERROR -> it.result.errorThrowable?.let { error -> toastHelper.showToast("Error ${error.errorMessage}") }
                     }
-
-                    Status.ERROR -> it.result.errorThrowable?.errorMessage?.let { errorMessage ->
-                        toastHelper.showToast(errorMessage)
-                        Log.d("Log", errorMessage)
-                    }
-
-                    null -> {toastHelper.showToast("null")}          }
-                binding.swipeRefresh.isRefreshing = false
+                }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+
 
     }
 }

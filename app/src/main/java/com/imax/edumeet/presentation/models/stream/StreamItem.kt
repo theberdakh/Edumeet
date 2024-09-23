@@ -12,12 +12,14 @@ data class StreamItem(
     val streamGroup: String = "",
     val streamUrl: String = "",
     val authorName: String = "",
-    val authorSubject: String = ""
+    val authorSubject: String = "",
+    val authorProfile: String = "",
+    val streamId: String = ""
 ): Parcelable
 
 object StreamItemCallback: DiffUtil.ItemCallback<StreamItem>() {
     override fun areItemsTheSame(oldItem: StreamItem, newItem: StreamItem): Boolean {
-        return oldItem.streamTitle == newItem.streamTitle && oldItem.streamDate == newItem.streamDate
+        return oldItem.streamTitle == newItem.streamTitle && oldItem.streamDate == newItem.streamDate && oldItem.streamId == newItem.streamId
     }
 
     override fun areContentsTheSame(oldItem: StreamItem, newItem: StreamItem): Boolean {

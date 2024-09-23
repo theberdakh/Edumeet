@@ -2,7 +2,6 @@ package com.imax.edumeet.data.remote.models.stream.live
 
 import com.google.gson.annotations.SerializedName
 import com.imax.edumeet.presentation.models.stream.LiveStreamItem
-import com.imax.edumeet.presentation.models.stream.StreamItem
 
 data class LiveStreamResponse(
     @SerializedName("__v")
@@ -32,7 +31,7 @@ fun LiveStreamResponse.toLiveStreamItem(): LiveStreamItem {
         streamTitle = title,
         streamDate = streamInfo.updatedAt,
         streamGroup = group,
-        streamUrl = streamInfo.assets.iframe,
+        playerUrl = streamInfo.assets.iframe,
         authorName = teacher.name,
         authorSubject = science,
         authorProfile = teacher.profileImage

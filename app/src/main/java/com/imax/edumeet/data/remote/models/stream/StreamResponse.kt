@@ -17,6 +17,7 @@ data class StreamResponse(
     val planStream: String,
     val rating: Rating,
     val science: String,
+    val streamId: String,
     val streamInfo: StreamInfo,
     val teacher: Teacher,
     val title: String,
@@ -28,7 +29,7 @@ fun StreamResponse.toLiveStreamItem() = LiveStreamItem(
     streamGroup = this.group,
     streamDate = this.streamInfo.createdAt,
     streamStatus = this.streamInfo.broadcasting.toString(),
-    streamUrl = this.streamInfo.assets.iframe,
+    playerUrl = this.streamInfo.assets.player,
     authorName = this.teacher.name,
     authorSubject = this.science
 )
@@ -40,7 +41,9 @@ fun StreamResponse.toStreamItem() = StreamItem(
     streamStatus = this.streamInfo.broadcasting.toString(),
     streamUrl = this.streamInfo.assets.iframe,
     authorName = this.teacher.name,
-    authorSubject = this.science
+    authorSubject = this.science,
+    authorProfile = this.teacher.profileImage,
+    streamId = this.streamId
 )
 
 

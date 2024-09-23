@@ -5,6 +5,7 @@ import com.imax.edumeet.presentation.screens.login.LoginViewModel
 import com.imax.edumeet.presentation.screens.onboard.OnBoardScreenViewModel
 import com.imax.edumeet.presentation.screens.profile.ProfileScreenViewModel
 import com.imax.edumeet.presentation.screens.schedule.ScheduleScreenViewModel
+import com.imax.edumeet.presentation.screens.watch.WatchScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -26,7 +27,11 @@ val viewModelModule = module {
     }
 
     viewModel <ProfileScreenViewModel>{
-        ProfileScreenViewModel(repository = get(), localPreferences = get())
+        ProfileScreenViewModel(repository = get(), localPreferences = get(), streamRepository = get())
+    }
+
+    viewModel<WatchScreenViewModel> {
+        WatchScreenViewModel(repository = get())
     }
 
 }

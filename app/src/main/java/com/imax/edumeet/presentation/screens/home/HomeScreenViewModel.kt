@@ -24,8 +24,8 @@ class HomeScreenViewModel(private val repository: StreamRepository) : ViewModel(
     internal val allStreamsState: StateFlow<NetworkState<List<StreamItem>>> =
         _allStreamsState.asStateFlow()
 
-    fun getAllStreams() = viewModelScope.launch {
-        repository.getAllStreams()
+    fun getPreviousStreams() = viewModelScope.launch {
+        repository.getPreviousStreams()
             .onStart {_allStreamsState.value = NetworkState(isLoading = true)}
             .catch { _allStreamsState.value = NetworkState(isLoading = false, ResultModel.error(it)) }
             .collect { r ->

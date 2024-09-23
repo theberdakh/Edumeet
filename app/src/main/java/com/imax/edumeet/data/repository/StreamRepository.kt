@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.flow
 
 class StreamRepository(private val api: EduMeetApi) {
 
-    fun getAllStreams() = flow {
-        val response = api.getAllStreams()
+    fun getPreviousStreams() = flow {
+        val response = api.getPreviousStreams()
         emit(ResultModel.success(response))
     }.catch {
         emit(ResultModel.error(it))
@@ -38,6 +38,20 @@ class StreamRepository(private val api: EduMeetApi) {
 
     fun getLiveStreams() = flow {
         val response = api.getLiveStreams()
+        emit(ResultModel.success(response))
+    }.catch {
+        emit(ResultModel.error(it))
+    }
+
+    fun getVideo(streamId: String) = flow {
+        val response = api.getVideo(streamId)
+        emit(ResultModel.success(response))
+    }.catch {
+        emit(ResultModel.error(it))
+    }
+
+    fun getMyStreams(teacherId: String) = flow {
+        val response = api.getMyStreams(teacherId)
         emit(ResultModel.success(response))
     }.catch {
         emit(ResultModel.error(it))
