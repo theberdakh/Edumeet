@@ -1,6 +1,8 @@
 package com.imax.edumeet.data.remote.models.stream
 
 import com.google.gson.annotations.SerializedName
+import com.imax.edumeet.data.remote.models.Comment
+import com.imax.edumeet.presentation.models.FeedbackItem
 import com.imax.edumeet.presentation.models.stream.LiveStreamItem
 import com.imax.edumeet.presentation.models.stream.StreamItem
 
@@ -10,12 +12,12 @@ data class StreamResponse(
     @SerializedName("_id")
     val id: String,
     val classRoom: String,
-    val comments: List<Any>,
+    val comments: List<Comment>,
     val description: String,
     val group: String,
     val isEnded: Boolean,
     val planStream: String,
-    val rating: Rating,
+    val rating: RatingData,
     val science: String,
     val streamId: String,
     val streamInfo: StreamInfo,
@@ -25,6 +27,7 @@ data class StreamResponse(
 )
 
 fun StreamResponse.toLiveStreamItem() = LiveStreamItem(
+    id = this.id,
     streamTitle = this.title,
     streamGroup = this.group,
     streamDate = this.streamInfo.createdAt,
@@ -35,6 +38,7 @@ fun StreamResponse.toLiveStreamItem() = LiveStreamItem(
 )
 
 fun StreamResponse.toStreamItem() = StreamItem(
+    id = this.id,
     streamTitle = this.title,
     streamGroup = this.group,
     streamDate = this.streamInfo.createdAt,
@@ -45,5 +49,6 @@ fun StreamResponse.toStreamItem() = StreamItem(
     authorProfile = this.teacher.profileImage,
     streamId = this.streamId
 )
+
 
 

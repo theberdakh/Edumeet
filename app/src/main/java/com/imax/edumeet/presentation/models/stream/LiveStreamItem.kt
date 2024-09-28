@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class LiveStreamItem(
+    val id: String = "",
     val streamTitle: String = "",
     val streamStatus: String = "",
     val streamDate: String = "",

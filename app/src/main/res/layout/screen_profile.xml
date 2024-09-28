@@ -58,15 +58,6 @@
                     android:text="@string/planned"
                     android:textAppearance="@style/Title.Header" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvLiveStreams"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:itemCount="10"
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/item_live_stream"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

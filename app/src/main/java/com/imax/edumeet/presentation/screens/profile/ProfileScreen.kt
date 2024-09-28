@@ -16,6 +16,7 @@ import com.imax.edumeet.databinding.ScreenProfileBinding
 import com.imax.edumeet.presentation.adapter.LiveStreamItemListAdapter
 import com.imax.edumeet.presentation.adapter.StreamItemListAdapter
 import com.imax.edumeet.presentation.screens.watch.WatchLiveScreen
+import com.imax.edumeet.presentation.screens.watch.WatchSelfVideos
 import com.imax.edumeet.presentation.screens.watch.WatchVODScreen
 import com.imax.navigation.NavigationExtensions.addFragmentToBackStack
 import com.imax.viewbinding.viewBinding
@@ -26,7 +27,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileScreen: Fragment(R.layout.screen_profile) {
     private val binding by viewBinding<ScreenProfileBinding>()
-    private val liveStreamItemListAdapter by lazy { LiveStreamItemListAdapter() }
     private val streamItemListAdapter by lazy { StreamItemListAdapter() }
     private val localPreferences by inject<LocalPreferences>()
     private val toastHelper by inject<ToastHelper>()
@@ -37,18 +37,13 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
 
         observeHomeScreenViewModel()
 
-        binding.rvLiveStreams.adapter = liveStreamItemListAdapter
         binding.rvPlannedStreams.adapter = streamItemListAdapter
 
         binding.swipeRefresh.setOnRefreshListener {
             observeHomeScreenViewModel()
         }
-
-        liveStreamItemListAdapter.setOnLiveStreamItemClickListener { liveStreamItem ->
-            requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchLiveScreen.newInstance(liveStreamItem) )
-        }
         streamItemListAdapter.setOnStreamItemClickListener { streamItem ->
-            requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchVODScreen.newInstance(streamItem) )
+            requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchSelfVideos.newInstance(streamItem) )
         }
 
 

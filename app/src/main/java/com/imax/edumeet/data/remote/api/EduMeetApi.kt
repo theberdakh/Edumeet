@@ -1,5 +1,7 @@
 package com.imax.edumeet.data.remote.api
 
+import com.imax.edumeet.data.remote.models.feedback.FeedbackRequest
+import com.imax.edumeet.data.remote.models.feedback.FeedbackResponse
 import com.imax.edumeet.data.remote.models.group.GroupResponse
 import com.imax.edumeet.data.remote.models.login.LoginRequest
 import com.imax.edumeet.data.remote.models.login.LoginResponse
@@ -43,5 +45,10 @@ interface EduMeetApi {
     @GET("/my-streams/{teacherId}")
     suspend fun getMyStreams(@Path("teacherId") teacherId: String): MyStreamsResponse
 
+    @POST("/stream/{streamId}/feedback")
+    suspend fun sendFeedback(@Path("streamId") streamId: String, @Body feedback: FeedbackRequest): StreamResponse
+
+    @GET("/stream/{streamId}/feedbacks")
+    suspend fun getFeedbacks(@Path("streamId") streamId: String): FeedbackResponse
 
 }

@@ -31,7 +31,7 @@ val viewModelModule = module {
     }
 
     viewModel<WatchScreenViewModel> {
-        WatchScreenViewModel(repository = get())
+        WatchScreenViewModel(repository = get(), localPreferences = get())
     }
 
 }

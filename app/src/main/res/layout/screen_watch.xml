@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="match_parent">
 
@@ -87,8 +88,116 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom">
+            android:orientation="vertical">
+
+
+
+
+            <TextView
+                android:id="@+id/ratingHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/your_rating"
+                android:padding="@dimen/small_100"
+                android:layout_marginTop="@dimen/normal_100"
+                android:textAppearance="@style/Title.Header"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/feedbackList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_feedback"
+                tools:itemCount="1"/>
+
+            <FrameLayout
+                android:id="@+id/ratingBarLayout"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small_100"
+                android:orientation="vertical"
+                android:background="@drawable/bg_text_field">
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:ratingBarStyle"
+                    android:isIndicator="false"
+                    android:scaleX=".7"
+                    android:scaleY=".7"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/layoutFeedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small_100"
+                android:layout_marginTop="@dimen/small_150"
+                android:orientation="vertical"
+                android:background="@drawable/bg_text_field">
+
+                <TextView
+                    android:id="@+id/ratingText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/small_50"
+                    android:textAppearance="@style/Title.Header"/>
+
+
+                <EditText
+                    android:id="@+id/etFeedback"
+                    android:layout_width="match_parent"
+                    android:padding="@dimen/small_50"
+                    android:fontFamily="@font/dm_sans_medium"
+                    android:textAppearance="?textAppearanceBodyLarge"
+                    android:background="@drawable/bg_text_field_white"
+                    android:layout_height="match_parent"
+                    android:inputType="textMultiLine"
+                    android:autofillHints="name"
+                    android:hint="@string/hint_feedback"/>
+
+                <FrameLayout
+                    android:id="@+id/btnSendFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_button"
+                    android:layout_marginVertical="@dimen/small_150"
+                    android:padding="@dimen/small_50">
+
+                    <TextView
+                        android:id="@+id/sendFeedbackText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/dm_sans_medium"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/send"/>
+
+                    <ProgressBar
+                        android:id="@+id/sendFeedbackProgress"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/large_100"
+                        android:indeterminate="true"
+                        android:indeterminateTintMode="src_atop"
+                        android:indeterminateTint="@color/white" />
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+
+
 
             <FrameLayout
                 android:id="@+id/btn_quit"
@@ -109,7 +218,11 @@
                     android:textStyle="bold"
                     android:text="@string/quit"/>
 
+
+
             </FrameLayout>
+
+
 
         </LinearLayout>
 

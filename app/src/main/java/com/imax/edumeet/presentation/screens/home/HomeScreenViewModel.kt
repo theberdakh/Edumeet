@@ -20,25 +20,25 @@ import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(private val repository: StreamRepository) : ViewModel() {
 
-    private val _allStreamsState = MutableStateFlow(NetworkState<List<StreamItem>>())
-    internal val allStreamsState: StateFlow<NetworkState<List<StreamItem>>> =
-        _allStreamsState.asStateFlow()
+    private val _previousStreamsState = MutableStateFlow(NetworkState<List<StreamItem>>())
+    internal val previousStreamsState: StateFlow<NetworkState<List<StreamItem>>> =
+        _previousStreamsState.asStateFlow()
 
     fun getPreviousStreams() = viewModelScope.launch {
         repository.getPreviousStreams()
-            .onStart {_allStreamsState.value = NetworkState(isLoading = true)}
-            .catch { _allStreamsState.value = NetworkState(isLoading = false, ResultModel.error(it)) }
+            .onStart {_previousStreamsState.value = NetworkState(isLoading = true)}
+            .catch { _previousStreamsState.value = NetworkState(isLoading = false, ResultModel.error(it)) }
             .collect { r ->
             when (r.status) {
                 Status.SUCCESS -> {
-                    _allStreamsState.value =
+                    _previousStreamsState.value =
                         NetworkState(
                             isLoading = false,
                             result = ResultModel.success(r.data?.map { it.toStreamItem() })
                         )
                 }
 
-                Status.ERROR -> _allStreamsState.value =
+                Status.ERROR -> _previousStreamsState.value =
                     NetworkState(
                         isLoading = false,
                         result = r.errorThrowable?.let { ResultModel.error(it) })

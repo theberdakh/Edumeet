@@ -32,9 +32,7 @@ class HomeScreen : Fragment(R.layout.screen_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         observeHomeScreenViewModel()
-
         binding.rvLiveStreams.adapter = liveStreamItemListAdapter
         binding.rvPlannedStreams.adapter = streamItemListAdapter
 
@@ -54,7 +52,7 @@ class HomeScreen : Fragment(R.layout.screen_home) {
     private fun observeHomeScreenViewModel() {
 
         homeScreenViewModel.getPreviousStreams()
-        homeScreenViewModel.allStreamsState.onEach {
+        homeScreenViewModel.previousStreamsState.onEach {
             if (it.isLoading) {
                 binding.swipeRefresh.isRefreshing = true
             } else {

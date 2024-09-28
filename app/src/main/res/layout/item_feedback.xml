@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_marginVertical="@dimen/small_50"
+    android:background="@drawable/bg_stream">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/small_150"
+        android:paddingVertical="@dimen/small_50"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_account">
+
+        <ImageView
+            android:id="@+id/authorImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/cd_live_author"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/small_150"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/authorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Title.Header"
+                tools:text="Alan Turing"
+                android:textColor="@color/dark_blue"
+                android:textStyle="bold"
+                android:fontFamily="@font/dm_sans_medium"
+                />
+
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:ratingBarStyleSmall"
+                android:isIndicator="true"/>
+
+            <TextView
+                android:id="@+id/authorComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Mathematics"
+                android:textColor="@color/dark_blue"
+                android:fontFamily="@font/dm_sans_medium" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

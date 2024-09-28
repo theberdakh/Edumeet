@@ -37,4 +37,10 @@
     <string name="retry">Retry</string>
     <string name="end_livestream">End live streaming</string>
     <string name="dialog_title_failed">Failed</string>
+    <string name="feedback">Feedback</string>
+    <string name="your_rating">Your rating</string>
+    <string name="hint_feedback">Add feedback to your rating</string>
+    <string name="send">Send</string>
+    <string name="your_rating_placeholder">Your rating is %1$s/5</string>
+    <string name="your_latest_rating_is_placeholder">Your rating is %1$s</string>
 </resources>
