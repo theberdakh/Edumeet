@@ -29,12 +29,10 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val ARG_STREAM_ITEM = "ARG_STREAM"
+
 private const val ARG_LIVE_STREAM_ITEM = "ARG_LIVE_STREAM"
-class WatchScreen: Fragment(R.layout.screen_watch) {
-    private val viewModel by viewModel<WatchScreenViewModel>()
+class WatchLiveScreen: Fragment(R.layout.screen_watch) {
     private val binding by viewBinding<ScreenWatchBinding>()
-    private var streamItem: StreamItem? = null
     private var liveStreamItem: LiveStreamItem? = null
     private val toastHelper by inject<ToastHelper>()
 
@@ -43,16 +41,14 @@ class WatchScreen: Fragment(R.layout.screen_watch) {
 
 
         arguments?.let {
-           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-               streamItem = it.getParcelable(ARG_STREAM_ITEM, StreamItem::class.java)
-               liveStreamItem = it.getParcelable(ARG_LIVE_STREAM_ITEM, LiveStreamItem::class.java)
+            liveStreamItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                it.getParcelable(ARG_LIVE_STREAM_ITEM, LiveStreamItem::class.java)
             } else {
-               streamItem = it.getParcelable(ARG_STREAM_ITEM)
-               liveStreamItem = it.getParcelable(ARG_LIVE_STREAM_ITEM)
+                it.getParcelable(ARG_LIVE_STREAM_ITEM)
             }
         }
 
-        Log.d("StreamItem", "$streamItem")
+        Log.d("StreamItem", "$liveStreamItem")
     }
 
 
@@ -60,7 +56,6 @@ class WatchScreen: Fragment(R.layout.screen_watch) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initObservers()
 
         Glide.with(requireContext())
             .load(liveStreamItem)
@@ -115,23 +110,20 @@ class WatchScreen: Fragment(R.layout.screen_watch) {
             binding.authorName.text = it.authorName
             binding.authorSubject.text = it.authorSubject
             binding.title.text = it.streamTitle
-            binding.webView.loadUrl(it.playerUrl)
-        }
 
-        streamItem?.let {
-
-            viewModel.getVideo(it.streamId)
-            binding.authorName.text = it.authorName
-            binding.authorSubject.text = it.authorSubject
-            binding.title.text = it.streamTitle
+            Log.i("URL", it.playerUrl)
+            val startIndex = it.playerUrl.indexOf("src=\"") + "src=\"".length
+            val endIndex = it.playerUrl.indexOf("\"", startIndex)
+            val url = it.playerUrl.substring(startIndex, endIndex)
+            binding.webView.loadUrl(url)
 
             Glide.with(requireContext())
                 .load(it.authorProfile)
                 .circleCrop()
                 .placeholder(R.drawable.ic_profile_fill)
                 .into(binding.authorImage)
+        }
 
-          }
 
         binding.progress.invisible()
 
@@ -141,30 +133,12 @@ class WatchScreen: Fragment(R.layout.screen_watch) {
 
     }
 
-    private fun initObservers() {
-        viewModel.videoState.onEach {
-            if (it.isLoading) {
-                binding.progress.visible()
-            }
-            if (!it.isLoading && it.result != null){
-                binding.progress.gone()
-                when(it.result.status){
-                    Status.SUCCESS -> it.result.data?.let { it1 -> binding.webView.loadUrl(it1.player) }
-                    Status.ERROR -> toastHelper.showToast("Error")
-                }
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
+
 
 
     companion object {
-        fun newInstance(stream: StreamItem)  = WatchScreen().apply {
-            arguments = Bundle().apply {
-                putParcelable(ARG_STREAM_ITEM, stream)
-            }
-        }
 
-        fun newInstance(stream: LiveStreamItem)  = WatchScreen().apply {
+        fun newInstance(stream: LiveStreamItem)  = WatchLiveScreen().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_LIVE_STREAM_ITEM, stream)
             }

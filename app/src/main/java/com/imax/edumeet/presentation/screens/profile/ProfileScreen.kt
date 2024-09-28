@@ -15,8 +15,8 @@ import com.imax.edumeet.data.remote.models.stream.toStreamItem
 import com.imax.edumeet.databinding.ScreenProfileBinding
 import com.imax.edumeet.presentation.adapter.LiveStreamItemListAdapter
 import com.imax.edumeet.presentation.adapter.StreamItemListAdapter
-import com.imax.edumeet.presentation.screens.home.HomeScreenViewModel
-import com.imax.edumeet.presentation.screens.watch.WatchScreen
+import com.imax.edumeet.presentation.screens.watch.WatchLiveScreen
+import com.imax.edumeet.presentation.screens.watch.WatchVODScreen
 import com.imax.navigation.NavigationExtensions.addFragmentToBackStack
 import com.imax.viewbinding.viewBinding
 import kotlinx.coroutines.flow.launchIn
@@ -45,10 +45,10 @@ class ProfileScreen: Fragment(R.layout.screen_profile) {
         }
 
         liveStreamItemListAdapter.setOnLiveStreamItemClickListener { liveStreamItem ->
-            requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchScreen.newInstance(liveStreamItem) )
+            requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchLiveScreen.newInstance(liveStreamItem) )
         }
         streamItemListAdapter.setOnStreamItemClickListener { streamItem ->
-            requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchScreen.newInstance(streamItem) )
+            requireActivity().supportFragmentManager.addFragmentToBackStack(R.id.activity_main_container, WatchVODScreen.newInstance(streamItem) )
         }
 
 

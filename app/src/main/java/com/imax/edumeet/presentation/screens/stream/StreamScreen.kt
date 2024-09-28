@@ -29,8 +29,11 @@ import video.api.livestream.interfaces.IConnectionListener
 import video.api.livestream.models.AudioConfig
 import video.api.livestream.models.VideoConfig
 import video.api.livestream.views.ApiVideoView
+import java.security.Permission
 
 private const val ARG_STREAM_KEY = "STREAM_KEY"
+private const val CAMERA_REQUEST_CODE = 100
+private const val AUDIO_REQUEST_CODE = 101
 
 class StreamScreen : AppCompatActivity() {
     private lateinit var binding: ScreenStreamBinding
@@ -43,7 +46,6 @@ class StreamScreen : AppCompatActivity() {
     private val permissions = arrayOf(
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.CAMERA,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -51,6 +53,8 @@ class StreamScreen : AppCompatActivity() {
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.CAMERA,
     )
+
+
 
     private fun requestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -73,12 +77,14 @@ class StreamScreen : AppCompatActivity() {
     }
 
     private fun hasPermissions(context: Context?, vararg permissions: String): Boolean {
+
         if (context != null) {
             for (permission in permissions) {
                 if (ActivityCompat.checkSelfPermission(
                         context, permission
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
+                    toastHelper.showToast("$permission is not granted")
                     return false
                 }
             }
@@ -91,6 +97,8 @@ class StreamScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ScreenStreamBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
 
         streamKey = intent.getStringExtra(ARG_STREAM_KEY)
@@ -109,55 +117,20 @@ class StreamScreen : AppCompatActivity() {
                     dialog.cancel()
                 })
         }
-
-
-
     }
 
     override fun onResume() {
         super.onResume()
 
-        when {
-            (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED) -> {
-                startStreaming()
-            }
-
-            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
-                    || ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) -> {
-                toastHelper.showToast("Permissions denied")
-
-                requestPermissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.RECORD_AUDIO
-                    )
-                )
-            }
+        if (!hasPermissions(this)){
+            toastHelper.showToast("You need to grant permissions to stream")
+            requestPermissions()
+        } else {
+            startStreaming()
         }
-
     }
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if ((permissions[Manifest.permission.CAMERA] == true)
-                && (permissions[Manifest.permission.RECORD_AUDIO] == true)
-            ) {
-               startStreaming()
-            } else {
-                toastHelper.showToast("Permissions denied")
-            }
-        }
+
 
     @SuppressLint("MissingPermission")
     private fun startStreaming() {
@@ -216,7 +189,7 @@ class StreamScreen : AppCompatActivity() {
             noiseSuppressor = true
         )
         val videoConfig = VideoConfig(
-            bitrate = 2 * 1000 * 1000, // 2 Mbps
+            bitrate = 1 * 1000 * 1000, // 2 Mbps
             resolution = Resolution.RESOLUTION_720.size,
             fps = 30
         )
