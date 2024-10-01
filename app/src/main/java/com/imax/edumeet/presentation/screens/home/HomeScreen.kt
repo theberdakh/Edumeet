@@ -32,6 +32,8 @@ class HomeScreen : Fragment(R.layout.screen_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.i("HomeScreen", "ViewCreated")
+
         observeHomeScreenViewModel()
         binding.rvLiveStreams.adapter = liveStreamItemListAdapter
         binding.rvPlannedStreams.adapter = streamItemListAdapter

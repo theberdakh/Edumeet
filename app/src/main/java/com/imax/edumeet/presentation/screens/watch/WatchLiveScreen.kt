@@ -44,7 +44,6 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         arguments?.let {
             liveStreamItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
                 it.getParcelable(ARG_LIVE_STREAM_ITEM, LiveStreamItem::class.java)
@@ -52,8 +51,6 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
                 it.getParcelable(ARG_LIVE_STREAM_ITEM)
             }
         }
-
-        Log.d("StreamItem", "$liveStreamItem")
     }
 
 
@@ -61,19 +58,13 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            if (rating>0){
-                binding.layoutFeedback.visible()
-                latestRating = rating
-                binding.ratingText.text = getString(R.string.your_rating_placeholder, rating)
-            } else {
-                latestRating = 0f
-                binding.layoutFeedback.gone()
-            }
-        }
 
         initObservers()
+        binding.feedbackList.adapter = feedbackItemListAdapter
 
+        binding.btnQuit.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
 
         binding.webView.apply {
             settings.javaScriptEnabled = true
@@ -124,7 +115,6 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
             binding.authorSubject.text = it.authorSubject
             binding.title.text = it.streamTitle
 
-            Log.i("URL", it.playerUrl)
             val startIndex = it.playerUrl.indexOf("src=\"") + "src=\"".length
             val endIndex = it.playerUrl.indexOf("\"", startIndex)
             val url = it.playerUrl.substring(startIndex, endIndex)
@@ -136,18 +126,25 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
                 .placeholder(R.drawable.ic_profile_fill)
                 .into(binding.authorImage)
 
+            viewModel.getTeacherFeedbacks(it.id)
+
             binding.btnSendFeedback.setOnClickListener { view ->
                 viewModel.sendFeedback(it.id, latestRating, binding.etFeedback.string)
             }
+        }
 
+        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
+            if (rating>0){
+                binding.layoutFeedback.visible()
+                latestRating = rating
+                binding.ratingText.text = getString(R.string.your_rating_placeholder, rating)
+            } else {
+                latestRating = 0f
+                binding.layoutFeedback.gone()
+            }
         }
 
 
-        binding.progress.invisible()
-
-        binding.btnQuit.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
-        }
 
 
 
@@ -157,32 +154,26 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
     private fun initObservers() {
         viewModel.sendFeedbackState.onEach {
             if (it.isLoading){
-                Log.i("Feedback", "Loading...")
+                binding.sendFeedbackText.gone()
+                binding.sendFeedbackProgress.visible()
             }
             if (!it.isLoading && it.result != null) {
-                binding.progress.gone()
+                binding.sendFeedbackText.visible()
+                binding.sendFeedbackProgress.gone()
                 when (it.result.status) {
                     Status.SUCCESS -> it.result.data?.let { streamResponse ->
-                        Log.i("Feedback", "Send...")
                         viewModel.getTeacherFeedbacks(streamResponse.id)
-                        toastHelper.showToast("Your feedback is send")
+                        toastHelper.showToast(getString(R.string.your_feedback_send))
                     }
 
                     Status.ERROR -> {
-                        Log.i("Feedback", "${it.result.errorThrowable}")
-                        it.result.errorThrowable?.let {error -> toastHelper.showToast(
-                            error.errorMessage
-                        ) }
-
+                        it.result.errorThrowable?.let {error -> toastHelper.showToast(error.errorMessage) }
                     }
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.teacherFeedback.onEach {
-            if (it.isLoading) {
-                Log.i("TeacherFeedback", "Loading")
-            }
             if (!it.isLoading && it.result != null){
                 when(it.result.status){
                     Status.SUCCESS -> it.result.data?.let { feedbacks ->
@@ -195,9 +186,9 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
                         feedbackItemListAdapter.submitList(feedbacks)
                         feedbackItemListAdapter.notifyDataSetChanged()
                     }
-                    Status.ERROR -> it.result.errorThrowable?.let {error -> toastHelper.showToast(
-                        error.errorMessage
-                    ) }
+                    Status.ERROR -> it.result.errorThrowable?.let {error ->
+                    //    toastHelper.showToast(error.errorMessage)
+                    }
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -205,7 +196,6 @@ class WatchLiveScreen: Fragment(R.layout.screen_watch) {
 
 
     companion object {
-
         fun newInstance(stream: LiveStreamItem)  = WatchLiveScreen().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_LIVE_STREAM_ITEM, stream)

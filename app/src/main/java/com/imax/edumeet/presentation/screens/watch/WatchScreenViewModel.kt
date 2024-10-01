@@ -33,10 +33,9 @@ class WatchScreenViewModel(private val repository: StreamRepository, private val
                 _videoState.emit(NetworkState(isLoading = false, ResultModel.error(it)))
             }
             .collect {
-                when(it.status){
-                    Status.SUCCESS -> _videoState.emit(NetworkState(isLoading = false, ResultModel.success(it.data)))
-                    Status.ERROR -> _videoState.emit(NetworkState(isLoading = false,
-                        it.errorThrowable?.let { error -> ResultModel.error(error) }))
+                _videoState.value =  when(it.status){
+                    Status.SUCCESS -> NetworkState(isLoading = false, ResultModel.success(it.data))
+                    Status.ERROR -> NetworkState(isLoading = false, it.errorThrowable?.let { error -> ResultModel.error(error) })
                 }
             }
     }
@@ -96,8 +95,6 @@ class WatchScreenViewModel(private val repository: StreamRepository, private val
             .collect {
               _teacherFeedback.value = when(it.status){
                     Status.SUCCESS -> {
-                        Log.i("Teacher Feedback: Success", streamId)
-                        Log.i("Teacher Feedback: Success", it.toString())
                         val feedbacks = it.data?.data?.rating?.ratings?.filter { rating ->
                             rating.teacher.id == localPreferences.getUser().id
                         }?.map { filteredRating ->

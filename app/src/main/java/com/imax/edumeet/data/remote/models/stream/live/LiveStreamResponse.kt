@@ -28,6 +28,7 @@ data class LiveStreamResponse(
 
 fun LiveStreamResponse.toLiveStreamItem(): LiveStreamItem {
     return LiveStreamItem(
+        id = id,
         streamTitle = title,
         streamDate = streamInfo.updatedAt,
         streamGroup = group,

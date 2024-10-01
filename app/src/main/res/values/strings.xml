@@ -43,4 +43,5 @@
     <string name="send">Send</string>
     <string name="your_rating_placeholder">Your rating is %1$s/5</string>
     <string name="your_latest_rating_is_placeholder">Your rating is %1$s</string>
+    <string name="your_feedback_send">Your feedback is send</string>
 </resources>

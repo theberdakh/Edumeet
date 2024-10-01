@@ -40,8 +40,6 @@ class WatchSelfVideos: Fragment(R.layout.screen_watch) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         arguments?.let {
             streamItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
                 it.getParcelable(ARG_STREAM_ITEM, StreamItem::class.java)
@@ -49,8 +47,6 @@ class WatchSelfVideos: Fragment(R.layout.screen_watch) {
                 it.getParcelable(ARG_STREAM_ITEM)
             }
         }
-
-        Log.d("StreamItem", "$streamItem")
     }
 
 
@@ -106,8 +102,6 @@ class WatchSelfVideos: Fragment(R.layout.screen_watch) {
 
             }
         }
-
-
 
         streamItem?.let {
             viewModel.getVideo(it.streamId)
@@ -165,9 +159,7 @@ class WatchSelfVideos: Fragment(R.layout.screen_watch) {
                         feedbackItemListAdapter.submitList(feedbacks)
                         feedbackItemListAdapter.notifyDataSetChanged()
                     }
-                    Status.ERROR -> it.result.errorThrowable?.let {error -> toastHelper.showToast(
-                        error.errorMessage
-                    ) }
+                    Status.ERROR -> it.result.errorThrowable?.let {error -> toastHelper.showToast(error.errorMessage) }
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)

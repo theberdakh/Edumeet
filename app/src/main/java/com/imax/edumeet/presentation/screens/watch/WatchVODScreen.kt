@@ -32,7 +32,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val ARG_STREAM_ITEM = "ARG_STREAM"
-class WatchVODScreen: Fragment(R.layout.screen_watch) {
+class WatchVODScreen : Fragment(R.layout.screen_watch) {
     private val viewModel by viewModel<WatchScreenViewModel>()
     private val binding by viewBinding<ScreenWatchBinding>()
     private var streamItem: StreamItem? = null
@@ -43,41 +43,29 @@ class WatchVODScreen: Fragment(R.layout.screen_watch) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         arguments?.let {
-            streamItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            streamItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 it.getParcelable(ARG_STREAM_ITEM, StreamItem::class.java)
             } else {
                 it.getParcelable(ARG_STREAM_ITEM)
             }
         }
-
-        Log.d("StreamItem", "$streamItem")
     }
 
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-          initObservers()
-
-        binding.ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            if (rating>0){
-                binding.layoutFeedback.visible()
-                latestRating = rating
-                binding.ratingText.text = getString(R.string.your_rating_placeholder, rating)
-            } else {
-                latestRating = 0f
-                binding.layoutFeedback.gone()
-            }
-        }
+        initObservers()
 
         binding.feedbackList.adapter = feedbackItemListAdapter
 
+        binding.btnQuit.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
         binding.webView.apply {
             settings.javaScriptEnabled = true
-            webViewClient = object: WebViewClient() {
-
+            webViewClient = object : WebViewClient() {
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
                     binding.progress.visible()
@@ -95,9 +83,7 @@ class WatchVODScreen: Fragment(R.layout.screen_watch) {
                     error: WebResourceError?
                 ) {
                     super.onReceivedError(view, request, error)
-                    Log.d("Log", "$error")
                     error?.let {
-                        Log.d("Log", "$error")
                         toastHelper.showToast("${it.errorCode}: ${it.description}")
                     }
                 }
@@ -108,9 +94,7 @@ class WatchVODScreen: Fragment(R.layout.screen_watch) {
                     errorResponse: WebResourceResponse?
                 ) {
                     super.onReceivedHttpError(view, request, errorResponse)
-                    Log.d("Lo2", "$errorResponse")
                     errorResponse?.let {
-                        Log.d("Lo2", "$errorResponse")
                         toastHelper.showToast("${it.statusCode}: ${it.reasonPhrase}")
                     }
                 }
@@ -118,92 +102,82 @@ class WatchVODScreen: Fragment(R.layout.screen_watch) {
             }
         }
 
+        streamItem?.let {
+            viewModel.getVideo(it.streamId)
+            binding.authorName.text = it.authorName
+            binding.authorSubject.text = it.authorSubject
+            binding.title.text = it.streamTitle
+            viewModel.getTeacherFeedbacks(it.id)
 
+            Glide.with(requireContext())
+                .load(it.authorProfile)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile_fill)
+                .into(binding.authorImage)
 
-           streamItem?.let {
-               viewModel.getVideo(it.streamId)
-               binding.authorName.text = it.authorName
-               binding.authorSubject.text = it.authorSubject
-               binding.title.text = it.streamTitle
-               viewModel.getTeacherFeedbacks(it.id)
-
-               Glide.with(requireContext())
-                   .load(it.authorProfile)
-                   .circleCrop()
-                   .placeholder(R.drawable.ic_profile_fill)
-                   .into(binding.authorImage)
-
-               binding.btnSendFeedback.setOnClickListener { view ->
-                   viewModel.sendFeedback(it.id, latestRating, binding.etFeedback.string)
-               }
-             }
-
-
-
-        binding.progress.invisible()
-
-        binding.btnQuit.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            binding.btnSendFeedback.setOnClickListener { _ ->
+                viewModel.sendFeedback(it.id, latestRating, binding.etFeedback.string)
+            }
         }
 
+        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
+            if (rating > 0) {
+                binding.layoutFeedback.visible()
+                latestRating = rating
+                binding.ratingText.text = getString(R.string.your_rating_placeholder, rating)
+            } else {
+                latestRating = 0f
+                binding.layoutFeedback.gone()
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObservers() {
         viewModel.videoState.onEach {
-            Log.i("Stream", "VideoState $it")
             if (it.isLoading) {
                 binding.progress.visible()
             }
-            if (!it.isLoading && it.result != null){
+            if (!it.isLoading && it.result != null) {
                 binding.progress.gone()
-                when(it.result.status){
+                when (it.result.status) {
                     Status.SUCCESS -> it.result.data?.let { videoResponse ->
                         binding.webView.loadUrl(videoResponse.player)
                     }
-                    Status.ERROR -> it.result.errorThrowable?.let {error -> toastHelper.showToast(
-                        error.errorMessage
-                    ) }
+
+                    Status.ERROR -> it.result.errorThrowable?.let { error ->
+                        toastHelper.showToast(error.errorMessage)
+                    }
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.sendFeedbackState.onEach {
-            if (it.isLoading){
+            if (it.isLoading) {
                 binding.sendFeedbackText.gone()
                 binding.sendFeedbackProgress.visible()
-                Log.i("Feedback", "Loading...")
             }
             if (!it.isLoading && it.result != null) {
                 binding.sendFeedbackText.visible()
                 binding.sendFeedbackProgress.gone()
                 when (it.result.status) {
                     Status.SUCCESS -> it.result.data?.let { streamResponse ->
-                        Log.i("Feedback", "Send...")
                         viewModel.getTeacherFeedbacks(streamResponse.id)
-                        toastHelper.showToast("Your feedback is send")
-
+                        toastHelper.showToast(getString(R.string.your_feedback_send))
                     }
 
                     Status.ERROR -> {
-                        Log.i("Feedback", "${it.result.errorThrowable}")
-                        it.result.errorThrowable?.let {error -> toastHelper.showToast(
-                            error.errorMessage
-                        ) }
-
+                        it.result.errorThrowable?.let { error -> toastHelper.showToast(error.errorMessage) }
                     }
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.teacherFeedback.onEach {
-            if (it.isLoading) {
-                Log.i("TeacherFeedback", "Loading")
-            }
-            if (!it.isLoading && it.result != null){
-                when(it.result.status){
+            if (!it.isLoading && it.result != null) {
+                when (it.result.status) {
                     Status.SUCCESS -> it.result.data?.let { feedbacks ->
-                        if (feedbacks.isEmpty()){
+                        if (feedbacks.isEmpty()) {
                             binding.ratingBarLayout.visible()
                         } else {
                             binding.ratingBarLayout.gone()
@@ -212,9 +186,12 @@ class WatchVODScreen: Fragment(R.layout.screen_watch) {
                         feedbackItemListAdapter.submitList(feedbacks)
                         feedbackItemListAdapter.notifyDataSetChanged()
                     }
-                    Status.ERROR -> it.result.errorThrowable?.let {error -> toastHelper.showToast(
-                        error.errorMessage
-                    ) }
+
+                    Status.ERROR -> it.result.errorThrowable?.let { error ->
+                        toastHelper.showToast(
+                            error.errorMessage
+                        )
+                    }
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -222,7 +199,7 @@ class WatchVODScreen: Fragment(R.layout.screen_watch) {
 
 
     companion object {
-        fun newInstance(stream: StreamItem)  = WatchVODScreen().apply {
+        fun newInstance(stream: StreamItem) = WatchVODScreen().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_STREAM_ITEM, stream)
             }

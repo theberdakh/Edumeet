@@ -41,8 +41,6 @@ class StreamScreen : AppCompatActivity() {
     private val toastHelper by inject<ToastHelper>()
     private var streamKey: String? = ""
 
-
-
     private val permissions = arrayOf(
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.CAMERA,
@@ -53,8 +51,6 @@ class StreamScreen : AppCompatActivity() {
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.CAMERA,
     )
-
-
 
     private fun requestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -99,8 +95,6 @@ class StreamScreen : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
-
         streamKey = intent.getStringExtra(ARG_STREAM_KEY)
 
         val alertDialogHelper = AlertDialogHelper(this)
@@ -129,6 +123,7 @@ class StreamScreen : AppCompatActivity() {
             startStreaming()
         }
     }
+
 
 
 
@@ -189,7 +184,7 @@ class StreamScreen : AppCompatActivity() {
             noiseSuppressor = true
         )
         val videoConfig = VideoConfig(
-            bitrate = 1 * 1000 * 1000, // 2 Mbps
+            bitrate = 1 * 750 * 750, // 1 Mbps
             resolution = Resolution.RESOLUTION_720.size,
             fps = 30
         )
